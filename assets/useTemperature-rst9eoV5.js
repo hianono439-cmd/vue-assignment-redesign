@@ -1,0 +1,1 @@
+import{mt as e,u as t}from"./_plugin-vue_export-helper-Bvk8w3WE.js";import{a as n}from"./weatherApi-BVwm9KZD.js";var r=r=>{let i=n();return{displayTemp:t(()=>{let t=Number(e(r));return Number.isFinite(t)?i.unit===`fahrenheit`?Math.round(t*9/5+32):t:`—`}),unitSymbol:t(()=>i.unitSymbol)}};export{r as t};
