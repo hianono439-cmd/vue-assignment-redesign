@@ -34,6 +34,7 @@ const isCorrect = computed(
   () => selectedCityId.value === currentQuestion.value?.answer.id,
 )
 
+// 원본 배열을 바꾸지 않고 보기 순서를 무작위로 섞는다.
 const shuffle = (items) => {
   const shuffledItems = [...items]
   for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
@@ -53,6 +54,7 @@ const formatTemperature = (temperature) => {
   return `${temperature}°C`
 }
 
+// 정답 하나와 오답 세 개를 묶어 총 다섯 문제를 만든다.
 const createQuestions = (weatherList) =>
   shuffle(weatherList)
     .slice(0, totalRounds)
@@ -70,6 +72,7 @@ const createQuestions = (weatherList) =>
       }
     })
 
+// 새 게임을 시작할 때 점수와 진행 상태를 모두 초기화한다.
 const startGame = async () => {
   isPreparing.value = true
   gameError.value = ''
@@ -111,6 +114,8 @@ const selectAnswer = (cityId) => {
 
 const finishGame = () => {
   isCompleted.value = true
+
+  // 최고 점수는 새로고침 후에도 남도록 브라우저에 저장한다.
   if (score.value > highScore.value) {
     highScore.value = score.value
     localStorage.setItem(highScoreKey, String(score.value))

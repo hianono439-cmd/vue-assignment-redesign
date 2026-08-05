@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+// 각 URL과 화면 컴포넌트를 연결한다.
 const routes = [
   {
     path: '/',
@@ -37,6 +38,7 @@ const routes = [
     component: () => import('../views/OutingRecommendationsView.vue'),
   },
   {
+    // 등록되지 않은 주소는 404 화면으로 보낸다.
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('../views/NotFoundView.vue'),
@@ -44,6 +46,7 @@ const routes = [
 ]
 
 const router = createRouter({
+  // GitHub Pages에서 새로고침해도 경로가 유지되도록 Hash 방식을 사용한다.
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior: () => ({ top: 0 }),

@@ -1,4 +1,5 @@
 export const getWeatherStatus = (weatherMain, cloudiness = 0) => {
+  // OpenWeatherMap의 영문 상태를 화면용 한국어 표현으로 바꾼다.
   const statusMap = {
     Clear: '맑음',
     Rain: '비',
@@ -16,6 +17,7 @@ export const getWeatherStatus = (weatherMain, cloudiness = 0) => {
     Tornado: '돌풍',
   }
 
+  // Clouds는 구름량에 따라 세 단계로 나눠 표시한다.
   if (weatherMain === 'Clouds') {
     if (cloudiness <= 25) return '구름 조금'
     if (cloudiness <= 75) return '구름 많음'
@@ -25,6 +27,7 @@ export const getWeatherStatus = (weatherMain, cloudiness = 0) => {
   return statusMap[weatherMain] ?? '날씨 변화'
 }
 
+// 날씨 카드와 게임에서 공통으로 사용할 아이콘을 반환한다.
 export const getWeatherEmoji = (status = '') => {
   if (status === '맑음') return '☀️'
   if (status.includes('천둥')) return '⛈️'

@@ -33,6 +33,7 @@ const form = reactive({
   terms: false,
 })
 
+// 비밀번호가 영문과 숫자를 포함한 8자 이상인지 검사한다.
 const validatePassword = (_rule, value, callback) => {
   const hasLetter = /[A-Za-z]/.test(value)
   const hasNumber = /\d/.test(value)
@@ -48,6 +49,7 @@ const validatePassword = (_rule, value, callback) => {
   callback()
 }
 
+// 비밀번호 확인란이 처음 입력한 값과 같은지 검사한다.
 const validatePasswordConfirm = (_rule, value, callback) => {
   if (!value) {
     callback(new Error('비밀번호를 한 번 더 입력해 주세요.'))
@@ -94,6 +96,7 @@ const joinedDate = computed(() => {
   )
 })
 
+// 모든 입력값 검사를 통과한 경우에만 회원 Store에 정보를 저장한다.
 const submitForm = () => {
   formRef.value?.validate(async (valid) => {
     if (!valid) return
@@ -119,6 +122,7 @@ const resetForm = () => {
   formRef.value?.resetFields()
 }
 
+// 기존 회원 정보를 지우고 회원가입 양식을 초기 상태로 되돌린다.
 const registerAgain = () => {
   memberStore.clearMember()
   isCompleted.value = false

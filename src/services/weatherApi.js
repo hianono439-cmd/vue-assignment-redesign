@@ -3,6 +3,7 @@ import { getWeatherStatus } from '../utils/weatherPresentation'
 
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY?.trim()
 
+// 모든 날씨 요청에 공통으로 적용할 주소와 제한시간을 설정한다.
 const weatherClient = axios.create({
   baseURL: 'https://api.openweathermap.org/data/2.5',
   timeout: 10000,
@@ -10,6 +11,7 @@ const weatherClient = axios.create({
 
 const roundToOneDecimal = (value) => Math.round(value * 10) / 10
 
+// 위도와 경도를 이용해 OpenWeatherMap의 현재 관측값을 가져온다.
 export const fetchCurrentWeather = async (cityDefinition) => {
   if (!API_KEY) {
     const error = new Error('OpenWeatherMap API 키가 설정되지 않았습니다.')
@@ -27,6 +29,7 @@ export const fetchCurrentWeather = async (cityDefinition) => {
     },
   })
 
+  // API 용어를 화면에서 익숙한 한국어 날씨 표현으로 바꾼다.
   const currentCondition = data.weather?.[0] ?? {}
   const cloudiness = data.clouds?.all ?? 0
   const familiarStatus = getWeatherStatus(
@@ -55,6 +58,7 @@ export const fetchCurrentWeather = async (cityDefinition) => {
   }
 }
 
+// Axios 오류를 사용자가 이해할 수 있는 안내 문구로 변환한다.
 export const getWeatherApiErrorMessage = (error) => {
   if (error.code === 'MISSING_API_KEY') {
     return 'OpenWeatherMap API 키가 설정되지 않았습니다.'

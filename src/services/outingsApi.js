@@ -5,6 +5,7 @@ const TOUR_API_KEY = import.meta.env.VITE_TOUR_API_KEY?.trim()
 const TOUR_API_BASE_URL = 'https://apis.data.go.kr/B551011/KorService2'
 const OSRM_TABLE_URL = 'https://router.project-osrm.org/table/v1/driving'
 
+// 행사명과 주소에 아래 단어가 있으면 실내 행사로 분류한다.
 const indoorKeywords = [
   '전시',
   '미술',
@@ -71,6 +72,7 @@ const inferEventType = (title = '') => {
   return '축제·행사'
 }
 
+// TourAPI 응답에서 화면에 필요한 값만 같은 형식으로 정리한다.
 const normalizeEvent = (item) => {
   const latitude = Number(item.mapy)
   const longitude = Number(item.mapx)
@@ -91,6 +93,7 @@ const normalizeEvent = (item) => {
   }
 }
 
+// 실제 도로 조회 전에 가까운 후보를 거르기 위한 직선거리를 계산한다.
 const getDistanceKm = (origin, destination) => {
   const toRadians = (degree) => (degree * Math.PI) / 180
   const earthRadiusKm = 6371
@@ -107,6 +110,7 @@ const getDistanceKm = (origin, destination) => {
   return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
 
+// 현재 날짜에 진행 중인 행사만 TourAPI에서 가져온다.
 const fetchCurrentEvents = async () => {
   if (!TOUR_API_KEY) {
     const error = new Error('행사 정보 API 키가 설정되지 않았습니다.')
@@ -146,6 +150,7 @@ const fetchCurrentEvents = async () => {
     )
 }
 
+// 출발지에서 각 행사까지의 자동차 이동시간과 거리를 한 번에 조회한다.
 const fetchDrivingTimes = async (origin, destinations) => {
   if (!destinations.length) return []
 
@@ -189,6 +194,7 @@ const hasRainOrSnow = (weather) =>
   weather?.status?.includes('눈') ||
   Number(weather?.rainLastHour) > 0
 
+// 22도에 가까울수록 높은 점수를 주고 비·눈, 강풍, 극단 기온은 감점한다.
 const getWeatherScore = (weather, isIndoor) => {
   if (!weather) return 45
 
@@ -231,6 +237,7 @@ const addRecommendationScore = (event, maxDriveMinutes) => {
   )
   const suitabilityScore = event.isIndoor && hasRainOrSnow(event.weather) ? 100 : 75
 
+  // 날씨 55%, 이동시간 35%, 실내 적합도 10% 비율로 최종 점수를 만든다.
   return {
     ...event,
     weatherScore,
@@ -247,6 +254,8 @@ export const fetchOutingRecommendations = async ({
   limit = 12,
 }) => {
   const events = await fetchCurrentEvents()
+
+  // OSRM 요청이 너무 커지지 않도록 가까운 행사 24곳을 먼저 추린다.
   const candidateRadiusKm = maxDriveMinutes * 1.8
   const nearbyCandidates = events
     .map((event) => ({
@@ -266,6 +275,7 @@ export const fetchOutingRecommendations = async ({
     )
     .slice(0, limit)
 
+  // 행사 한 곳의 날씨 조회가 실패해도 나머지 추천은 계속 계산한다.
   const weatherResults = await Promise.allSettled(
     reachableEvents.map((event) =>
       fetchCurrentWeather({
@@ -290,6 +300,7 @@ export const fetchOutingRecommendations = async ({
     .sort((a, b) => b.recommendationScore - a.recommendationScore)
 }
 
+// 외부 API 오류 종류에 따라 화면에 표시할 문구를 정한다.
 export const getOutingApiErrorMessage = (error) => {
   if (error.code === 'MISSING_TOUR_API_KEY') {
     return '행사 정보 연결이 필요합니다. 공공데이터포털 TourAPI 키를 설정해 주세요.'

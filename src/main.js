@@ -6,6 +6,7 @@ import App from './App.vue'
 import router from './router'
 import './styles.css'
 
+// Vue 앱에 전역 Store, Router, Element Plus를 등록한다.
 createApp(App)
   .use(createPinia())
   .use(router)

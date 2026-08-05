@@ -10,6 +10,7 @@ const route = useRoute()
 const isHome = computed(() => route.name === 'weather-home')
 const isMobileMenuOpen = ref(false)
 
+// 다른 페이지로 이동하면 모바일 메뉴를 자동으로 닫는다.
 watch(
   () => route.fullPath,
   () => {
@@ -161,6 +162,7 @@ watch(
 }
 
 .app-header--overlay {
+  /* 메인 화면에서는 헤더를 날씨 배경 위에 고정한다. */
   position: fixed;
   top: 3px;
   right: 0;
@@ -340,6 +342,7 @@ watch(
 }
 
 @media (max-width: 900px) {
+  /* 작은 화면에서는 전체 메뉴 대신 메뉴 버튼을 사용한다. */
   .app-header {
     min-height: 72px;
     align-items: center;

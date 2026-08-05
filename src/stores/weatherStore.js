@@ -6,6 +6,7 @@ import {
 } from '../services/weatherApi'
 
 export const useWeatherStore = defineStore('weather', {
+  // 도시별 데이터와 로딩·오류 상태를 한곳에서 관리한다.
   state: () => ({
     weatherById: {},
     loadingCities: {},
@@ -28,6 +29,7 @@ export const useWeatherStore = defineStore('weather', {
   },
 
   actions: {
+    // 여러 도시 요청은 동시에 보내고, 일부 실패해도 성공한 결과는 화면에 표시한다.
     async loadAll({ force = false } = {}) {
       this.isLoadingAll = true
       this.errorMessage = ''
@@ -72,6 +74,7 @@ export const useWeatherStore = defineStore('weather', {
       return this.weatherList
     },
 
+    // 상세 화면에서는 필요한 도시 한 곳만 요청한다.
     async loadCity(cityId, { force = false } = {}) {
       const cityDefinition = findWeatherCity(cityId)
 
@@ -79,6 +82,7 @@ export const useWeatherStore = defineStore('weather', {
         return null
       }
 
+      // 이미 받은 데이터는 강제 새로고침이 아닐 때 다시 요청하지 않는다.
       if (!force && this.weatherById[cityId]) {
         return this.weatherById[cityId]
       }

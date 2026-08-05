@@ -26,6 +26,7 @@ const formattedLastUpdated = computed(() => {
   }).format(new Date(weatherStore.lastUpdated))
 })
 
+// 도시명 뒤에 붙는 '이/가'를 받침 유무에 맞게 결정한다.
 const getSubjectParticle = (word) => {
   const normalizedWord = word?.trim()
   if (!normalizedWord) return ''
@@ -41,6 +42,8 @@ const getSubjectParticle = (word) => {
 }
 
 const trimmedSearchQuery = computed(() => searchQuery.value.trim())
+
+// 검색어가 비어 있으면 전체 도시를, 입력되면 일치하는 도시만 반환한다.
 const filteredWeatherList = computed(() => {
   if (!trimmedSearchQuery.value) {
     return weatherList.value
@@ -59,6 +62,7 @@ const todayLabel = computed(() =>
   }).format(new Date()),
 )
 
+// 기온, 비·눈, 바람을 기준으로 현재 나들이하기 무난한 도시를 고른다.
 const outingWeatherCity = computed(() => {
   if (!weatherList.value.length) return null
 
@@ -82,6 +86,7 @@ const heroTemperature = computed(() => {
   return Number.isFinite(Number(temperature)) ? `${temperature}°` : '—'
 })
 
+// 선택된 도시의 날씨에 맞춰 메인 배경 테마를 바꾼다.
 const heroTheme = computed(() => {
   const status = heroWeatherCity.value?.status ?? ''
   if (status.includes('천둥') || status.includes('비')) return 'rain'
@@ -144,10 +149,12 @@ const loadWeather = async (force = false) => {
   }
 }
 
+// 화면에 처음 들어왔을 때 전체 도시 날씨를 불러온다.
 onMounted(() => {
   loadWeather()
 })
 
+// 선택 도시가 바뀌는 순간 이전 값과 새 값을 확인한다.
 watch(selectedCityInfo, (newCityInfo, oldCityInfo) => {
   if (!newCityInfo) return
 
@@ -158,6 +165,7 @@ watch(selectedCityInfo, (newCityInfo, oldCityInfo) => {
   console.log(`[watch] 안내 문구: ${statusMessage}`)
 })
 
+// 검색어 또는 필터 결과가 달라질 때마다 검색 상태를 확인한다.
 watchEffect(() => {
   const query = trimmedSearchQuery.value
   const matchedCities = filteredWeatherList.value.map((city) => city.name)
@@ -187,6 +195,7 @@ const openDetail = (city) => {
   router.push({ name: 'weather-detail', params: { cityId: city.id } })
 }
 
+// Hash Router와 충돌하지 않도록 링크 대신 직접 해당 영역으로 이동한다.
 const scrollToRecommendationGuide = () => {
   document.getElementById('how-it-works')?.scrollIntoView({
     behavior: 'smooth',

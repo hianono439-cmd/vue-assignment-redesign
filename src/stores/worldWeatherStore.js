@@ -21,6 +21,7 @@ export const useWorldWeatherStore = defineStore('worldWeather', {
   },
 
   actions: {
+    // 세계 도시도 동시에 요청하며 일부 실패한 도시는 제외하고 표시한다.
     async loadAll({ force = false } = {}) {
       if (this.isLoading) return this.weatherList
 

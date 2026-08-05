@@ -15,6 +15,7 @@ const originStorageKey = 'weather-dashboard-outing-origin'
 const configStore = useConfigStore()
 const memberStore = useMemberStore()
 
+// 마지막으로 선택한 출발 도시를 브라우저에서 읽는다.
 const readSavedOriginId = () => {
   try {
     return localStorage.getItem(originStorageKey)
@@ -51,6 +52,7 @@ const selectedCity = computed(
 const origin = computed(() => currentLocation.value ?? selectedCity.value)
 const originLabel = computed(() => origin.value.name)
 
+// 사용자가 고른 실내·야외 조건에 맞는 결과만 화면에 표시한다.
 const filteredRecommendations = computed(() => {
   if (spaceFilter.value === '실내') {
     return recommendations.value.filter((event) => event.isIndoor)
@@ -119,6 +121,7 @@ const getScoreType = (score) => {
   return 'info'
 }
 
+// 선택한 출발지와 최대 이동시간을 기준으로 추천 목록을 다시 요청한다.
 const loadRecommendations = async () => {
   if (!isTourApiConfigured || isLoading.value) return
 
@@ -145,6 +148,7 @@ const useSelectedCity = () => {
   loadRecommendations()
 }
 
+// 위치 사용을 허용하면 도시 좌표 대신 현재 GPS 좌표를 출발지로 사용한다.
 const useCurrentLocation = () => {
   if (!navigator.geolocation) {
     locationMessage.value = '이 브라우저에서는 현재 위치를 사용할 수 없습니다.'
@@ -179,6 +183,7 @@ const useCurrentLocation = () => {
   )
 }
 
+// 출발 도시가 바뀔 때 다음 방문에서도 사용할 수 있도록 저장한다.
 watch(selectedOriginId, (cityId) => {
   try {
     localStorage.setItem(originStorageKey, cityId)

@@ -1,3 +1,4 @@
+// 국내 날씨 조회에 사용할 도시 코드와 좌표 목록이다.
 export const cityDefinitions = [
   {
     id: 'city_01',

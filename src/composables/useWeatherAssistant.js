@@ -13,6 +13,7 @@ const createInitialMessage = (member) => ({
     : '도시 이름과 함께 날씨, 우산, 옷차림을 입력해 주세요.',
 })
 
+// 질문의 범위가 국내인지 세계인지 구분할 때 사용하는 단어 목록이다.
 const worldQuestionKeywords = [
   '세계',
   '해외',
@@ -36,6 +37,7 @@ const outingQuestionKeywords = [
   '오늘뭐',
 ]
 
+// 도시명 뒤에 자연스러운 조사를 붙이기 위해 받침 유무를 확인한다.
 const hasFinalConsonant = (word = '') => {
   const lastCode = word.charCodeAt(word.length - 1)
   return lastCode >= 0xac00 && lastCode <= 0xd7a3
@@ -98,6 +100,7 @@ export const useWeatherAssistant = () => {
   const findCity = (question, weatherList) =>
     weatherList.find((city) => question.includes(city.name))
 
+  // 도시 이름이 포함된 질문은 옷차림·우산·습도·바람 순으로 의도를 확인한다.
   const buildCityAnswer = (question, city) => {
     if (question.includes('옷') || question.includes('입')) {
       return `${topic(city.name)} 현재 ${formatTemperature(city.temp)}예요. ${getOutfitAdvice(city.temp)}`
@@ -120,6 +123,7 @@ export const useWeatherAssistant = () => {
     return `${topic(city.name)} 현재 ${city.status}, 기온은 ${formatTemperature(city.temp)}예요. 체감온도는 ${formatTemperature(city.feelsLike)}, 습도는 ${city.humidity ?? '확인되지 않음'}%입니다.`
   }
 
+  // 특정 도시가 없으면 여러 도시를 비교하는 질문으로 처리한다.
   const buildAnswer = (question, weatherList, scopeLabel) => {
     const normalizedQuestion = question.replaceAll(' ', '')
     const city = findCity(normalizedQuestion, weatherList)
@@ -213,6 +217,7 @@ export const useWeatherAssistant = () => {
     return continent ? `${continent} 주요 도시` : '세계 주요 도시'
   }
 
+  // 필요한 범위의 날씨가 아직 없을 때만 Store를 통해 API를 호출한다.
   const ensureWeatherData = async (scope) => {
     if (scope === 'world') {
       if (worldWeatherStore.weatherList.length === 0) {
@@ -225,6 +230,7 @@ export const useWeatherAssistant = () => {
     return weatherStore.weatherList
   }
 
+  // 회원가입 또는 회원정보 관련 질문은 날씨 질문보다 먼저 처리한다.
   const getMemberResponse = (question) => {
     const normalizedQuestion = question.replaceAll(' ', '')
     const asksAboutMember =
@@ -299,6 +305,7 @@ export const useWeatherAssistant = () => {
     })
   }
 
+  // 질문 종류를 판별한 뒤 알맞은 응답을 대화 목록에 추가한다.
   const sendMessage = async (messageText = draft.value) => {
     const question = messageText.trim()
     if (!question || isThinking.value) return
@@ -379,6 +386,7 @@ export const useWeatherAssistant = () => {
     messages.value = [createInitialMessage(memberStore.member)]
   }
 
+  // 회원가입이 끝나면 관심 도시를 바로 질문할 수 있도록 안내한다.
   watch(
     () => memberStore.member?.joinedAt,
     (joinedAt, previousJoinedAt) => {

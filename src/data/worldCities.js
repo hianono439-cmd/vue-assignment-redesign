@@ -1,3 +1,4 @@
+// 대륙별 비교 화면에서 사용할 세계 주요 도시 목록이다.
 export const worldCityDefinitions = [
   {
     id: 'world_tokyo',
