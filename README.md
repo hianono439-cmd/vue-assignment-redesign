@@ -125,5 +125,3 @@ GitHub Pages에서 새로고침해도 경로를 찾을 수 있도록 Hash Router
 ```
 
 GitHub Actions가 두 값을 빌드 시 각각의 Vite 환경변수로 전달합니다.
-
-GitHub Pages는 정적 프런트엔드이므로 빌드된 JavaScript에서 API 키를 완전히 숨길 수는 없습니다. 저장소에 원문 키를 커밋하지 않기 위한 설정이며, 제출 후에는 키를 재발급하고 OpenWeatherMap에서 가능한 사용 제한을 설정하는 것을 권장합니다.
