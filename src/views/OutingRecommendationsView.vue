@@ -112,8 +112,49 @@ const formatEventDate = (dateText) => {
   }).format(date)
 }
 
-const getMapUrl = (event) =>
-  `https://map.naver.com/p/search/${encodeURIComponent(`${event.title} ${event.address}`)}`
+// TourAPI 주소에는 괄호 속 행정동이나 중복된 층 표기가 붙는 경우가 있다.
+const normalizeMapAddress = (address = '') =>
+  address
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/\s+지하\s*$/u, '')
+    .replace(/지하\s*(\d+)/gu, '지하 $1')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+// 행사명 뒤에 붙은 부제나 한자 표기를 걷어 내 지도에 표시할 이름을 만든다.
+const normalizeMapTitle = (title = '') =>
+  title
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/[（(][^()（）]*[)）]/g, ' ')
+    .replace(/\s*,.*$/u, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const getMapRegion = (address = '') =>
+  normalizeMapAddress(address)
+    .split(' ')
+    .filter((word) => /(?:시|군|구)$/u.test(word))
+    .slice(0, 2)
+    .join(' ')
+
+const getMapUrl = (event) => {
+  const latitude = Number(event.latitude)
+  const longitude = Number(event.longitude)
+  const placeName = normalizeMapTitle(event.title)
+
+  // 추천 데이터의 좌표를 직접 사용해 장소 검색 등록 여부와 관계없이 위치를 표시한다.
+  if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+    const mapLabel = encodeURIComponent(placeName || '행사 장소')
+    return `https://map.kakao.com/link/map/${mapLabel},${latitude},${longitude}`
+  }
+
+  const region = getMapRegion(event.address)
+  const searchQuery =
+    [placeName, region].filter(Boolean).join(' ') ||
+    normalizeMapAddress(event.address)
+
+  return `https://map.naver.com/p/search/${encodeURIComponent(searchQuery)}`
+}
 
 const getScoreType = (score) => {
   if (score >= 80) return 'success'
