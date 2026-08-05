@@ -1454,7 +1454,7 @@ const scrollToRecommendationGuide = () => {
   .home-hero {
     min-height: 100svh;
     align-content: center;
-    padding: 156px 24px 112px;
+    padding: 112px 24px 100px;
     grid-template-columns: 1fr;
   }
 
@@ -1521,7 +1521,7 @@ const scrollToRecommendationGuide = () => {
   .home-hero {
     min-height: 100svh;
     align-content: start;
-    padding: 174px 18px 100px;
+    padding: 108px 18px 88px;
   }
 
   .hero-copy h2 {

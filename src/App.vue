@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { motion, MotionConfig, useScroll } from 'motion-v'
 import UnitToggler from './components/exercise/UnitToggler.vue'
@@ -8,6 +8,14 @@ import WeatherAssistant from './components/exercise/WeatherAssistant.vue'
 const { scrollYProgress } = useScroll()
 const route = useRoute()
 const isHome = computed(() => route.name === 'weather-home')
+const isMobileMenuOpen = ref(false)
+
+watch(
+  () => route.fullPath,
+  () => {
+    isMobileMenuOpen.value = false
+  },
+)
 </script>
 
 <template>
@@ -29,12 +37,32 @@ const isHome = computed(() => route.name === 'weather-home')
         <RouterLink class="brand" to="/" aria-label="나갈까 홈">
           <span class="brand-mark" aria-hidden="true">N</span>
           <span class="brand-copy">
-            <strong id="page-title">나갈까<span>.</span></strong>
+            <strong id="page-title">나갈까</strong>
             <small>날씨에 맞춘 가까운 나들이</small>
           </span>
         </RouterLink>
 
-        <nav class="navigation" aria-label="주요 메뉴">
+        <button
+          type="button"
+          class="mobile-menu-toggle"
+          :class="{ 'mobile-menu-toggle--open': isMobileMenuOpen }"
+          :aria-expanded="isMobileMenuOpen"
+          aria-controls="main-navigation"
+          @click="isMobileMenuOpen = !isMobileMenuOpen"
+        >
+          <span class="mobile-menu-icon" aria-hidden="true">
+            <i></i>
+            <i></i>
+          </span>
+          {{ isMobileMenuOpen ? '닫기' : '메뉴' }}
+        </button>
+
+        <nav
+          id="main-navigation"
+          class="navigation"
+          :class="{ 'navigation--open': isMobileMenuOpen }"
+          aria-label="주요 메뉴"
+        >
           <div class="navigation-links">
             <RouterLink to="/outings">나들이 추천</RouterLink>
             <RouterLink to="/">국내 날씨</RouterLink>
@@ -61,7 +89,7 @@ const isHome = computed(() => route.name === 'weather-home')
 
       <footer class="site-footer">
         <div>
-          <strong>나갈까<span>.</span></strong>
+          <strong>나갈까</strong>
           <p>날씨와 가까운 행사를 함께 확인합니다.</p>
         </div>
         <p>날씨 · 행사 · 이동시간</p>
@@ -234,6 +262,10 @@ const isHome = computed(() => route.name === 'weather-home')
   gap: 17px;
 }
 
+.mobile-menu-toggle {
+  display: none;
+}
+
 .navigation-links {
   display: flex;
   align-items: center;
@@ -309,21 +341,130 @@ const isHome = computed(() => route.name === 'weather-home')
 
 @media (max-width: 900px) {
   .app-header {
-    align-items: flex-start;
-    padding: 19px 0 13px;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .navigation {
-    width: 100%;
-    justify-content: space-between;
+    min-height: 72px;
+    align-items: center;
+    padding: 10px 0;
+    flex-direction: row;
+    gap: 16px;
   }
 
   .app-header--overlay {
-    min-height: 126px;
+    min-height: 72px;
     padding-inline: 20px;
-    background: linear-gradient(to bottom, rgb(16 25 27 / 78%), transparent);
+    background: linear-gradient(to bottom, rgb(16 25 27 / 88%), rgb(16 25 27 / 18%));
+  }
+
+  .mobile-menu-toggle {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-left: auto;
+    padding: 8px 12px;
+    border: 1px solid rgb(31 42 43 / 18%);
+    border-radius: 999px;
+    color: #263332;
+    background: rgb(255 255 255 / 62%);
+    font-size: 0.68rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .app-header--overlay .mobile-menu-toggle {
+    border-color: rgb(255 255 255 / 32%);
+    color: #ffffff;
+    background: rgb(255 255 255 / 12%);
+  }
+
+  .mobile-menu-icon {
+    display: grid;
+    width: 15px;
+    gap: 4px;
+  }
+
+  .mobile-menu-icon i {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: currentcolor;
+    transition: transform 160ms ease;
+  }
+
+  .mobile-menu-toggle--open .mobile-menu-icon i:first-child {
+    transform: translateY(2.5px) rotate(45deg);
+  }
+
+  .mobile-menu-toggle--open .mobile-menu-icon i:last-child {
+    transform: translateY(-2.5px) rotate(-45deg);
+  }
+
+  .navigation {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    display: none;
+    width: min(330px, calc(100vw - 40px));
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid rgb(31 42 43 / 13%);
+    border-radius: 18px;
+    color: #263332;
+    background: rgb(247 244 237 / 98%);
+    box-shadow: 0 18px 45px rgb(19 31 32 / 22%);
+  }
+
+  .app-header--overlay .navigation {
+    right: 20px;
+  }
+
+  .navigation--open {
+    display: flex;
+  }
+
+  .navigation-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .navigation-links a {
+    width: 100%;
+    justify-content: flex-start;
+    border-radius: 10px;
+  }
+
+  .navigation-links a:hover,
+  .navigation-links a:focus-visible {
+    background: rgb(237 124 82 / 9%);
+    transform: none;
+  }
+
+  .app-header--overlay .navigation-links a {
+    color: #66716f;
+  }
+
+  .app-header--overlay .navigation-links .router-link-exact-active {
+    color: #df6740;
+  }
+
+  .app-header--overlay :deep(.navigation .unit-toggler) {
+    border-color: rgb(31 42 43 / 14%);
+  }
+
+  .app-header--overlay :deep(.navigation .current-unit small) {
+    color: #89918f;
+  }
+
+  .app-header--overlay :deep(.navigation .current-unit strong) {
+    color: #263332;
+  }
+
+  .app-header--overlay :deep(.navigation .unit-toggler button) {
+    border-color: transparent;
+    background: #263332;
   }
 }
 
@@ -343,24 +484,14 @@ const isHome = computed(() => route.name === 'weather-home')
     padding-top: 0;
   }
 
-  .navigation {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 8px;
-  }
-
   .navigation-links {
-    width: 100%;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 3px;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .navigation-links a {
-    flex: none;
-    padding-inline: 9px;
+    width: 100%;
+    padding-inline: 10px;
     font-size: 0.66rem;
   }
 

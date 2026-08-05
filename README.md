@@ -1,4 +1,4 @@
-# 나갈까. — 날씨 맞춤 나들이 추천
+# 나갈까 — 날씨 맞춤 나들이 추천
 
 날씨와 운전시간, 현재 진행 중인 행사를 함께 살펴보고 오늘 갈 만한 곳을 추천하는 Vue 서비스입니다. Composition API, 컴포넌트 분리, Vue Router, Pinia 전역 상태 관리, Axios 기반 실시간 데이터 연동, Motion for Vue 애니메이션과 Element Plus UI를 적용했습니다.
 

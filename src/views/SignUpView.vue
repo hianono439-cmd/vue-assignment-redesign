@@ -139,7 +139,7 @@ const registerAgain = () => {
     <div class="signup-intro">
       <span aria-hidden="true">👤</span>
       <p>회원 정보 등록</p>
-      <h2 id="signup-heading">나갈까. 회원가입</h2>
+      <h2 id="signup-heading">나갈까 회원가입</h2>
       <strong>자주 확인할 도시를 미리 선택하세요.</strong>
 
       <ol>

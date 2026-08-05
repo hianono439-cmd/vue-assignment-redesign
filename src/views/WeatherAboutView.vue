@@ -9,17 +9,17 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
       <span aria-hidden="true">ⓘ</span>
       <div>
         <p>서비스 안내</p>
-        <h2 id="about-heading">나갈까. 소개</h2>
+        <h2 id="about-heading">나갈까 소개</h2>
       </div>
     </div>
 
     <BaseDashboardCard
-      title="나갈까. 이용 방법"
+      title="나갈까 이용 방법"
       icon="↗"
       heading-id="about-service-heading"
     >
       <p class="intro">
-        나갈까.는 현재 날씨와 예상 이동시간을 기준으로
+        나갈까는 현재 날씨와 예상 이동시간을 기준으로
         진행 중인 행사와 전시를 보여줍니다.
       </p>
 
@@ -49,7 +49,7 @@ import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
     </BaseDashboardCard>
 
     <RouterLink class="home-link" to="/">
-      <span aria-hidden="true">←</span> 나갈까. 홈으로 돌아가기
+      <span aria-hidden="true">←</span> 나갈까 홈으로 돌아가기
     </RouterLink>
   </section>
 </template>
