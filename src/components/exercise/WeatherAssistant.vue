@@ -192,6 +192,9 @@ watch(
   z-index: 90;
   right: 22px;
   bottom: 22px;
+  display: grid;
+  justify-items: end;
+  gap: 10px;
   pointer-events: none;
 }
 
@@ -496,8 +499,8 @@ watch(
 
 @media (max-width: 560px) {
   .assistant-layer {
-    right: 12px;
-    bottom: 12px;
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
   }
 
   .assistant-panel {
@@ -506,19 +509,41 @@ watch(
   }
 
   .assistant-launcher {
-    min-width: 0;
-    width: 52px;
-    height: 52px;
-    place-items: center;
-    padding: 0;
-    border-radius: 16px;
+    width: auto;
+    min-width: 150px;
+    min-height: 56px;
+    align-items: center;
+    padding: 8px 15px 8px 10px;
+    border-color: rgb(255 255 255 / 72%);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 88% 12%, rgb(255 255 255 / 22%), transparent 36%),
+      linear-gradient(135deg, #ed7c52, #d95f3a);
+    box-shadow:
+      0 14px 32px rgb(59 38 31 / 34%),
+      0 0 0 4px rgb(237 124 82 / 16%);
+    grid-template-columns: 36px auto;
+    column-gap: 9px;
   }
 
   .assistant-launcher > span {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
     grid-row: auto;
+    border: 1px solid rgb(255 255 255 / 34%);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 16%);
+    font-size: 1.05rem;
   }
 
-  .assistant-launcher strong,
+  .assistant-launcher strong {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: -0.02em;
+  }
+
   .assistant-launcher small {
     display: none;
   }
