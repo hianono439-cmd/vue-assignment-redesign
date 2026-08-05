@@ -187,7 +187,9 @@ const useCurrentLocation = () => {
 watch(selectedOriginId, (cityId) => {
   try {
     localStorage.setItem(originStorageKey, cityId)
-  } catch {}
+  } catch {
+    // 저장소 사용이 제한된 환경에서도 도시 선택 기능은 그대로 유지한다.
+  }
 })
 
 onMounted(() => {

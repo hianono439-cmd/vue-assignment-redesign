@@ -44,7 +44,9 @@ const loadDetail = async (force = false) => {
 
   try {
     await weatherStore.loadCity(cityId.value, { force })
-  } catch {}
+  } catch {
+    // 요청 실패 메시지는 Store가 관리하므로 화면에서는 추가 예외를 발생시키지 않는다.
+  }
 }
 
 watch(cityId, () => loadDetail(), { immediate: true })

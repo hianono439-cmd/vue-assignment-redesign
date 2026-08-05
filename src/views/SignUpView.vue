@@ -1,6 +1,5 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { cityDefinitions } from '../data/weather'
 import { worldCityDefinitions } from '../data/worldCities'

@@ -20,7 +20,8 @@ watch(
 </script>
 
 <template>
-  <MotionConfig reduced-motion="user">
+  <el-config-provider size="default" :z-index="3000">
+    <MotionConfig reduced-motion="user">
     <motion.div
       class="scroll-progress"
       :style="{ scaleX: scrollYProgress }"
@@ -97,8 +98,9 @@ watch(
       </footer>
     </div>
 
-    <WeatherAssistant />
-  </MotionConfig>
+      <WeatherAssistant />
+    </MotionConfig>
+  </el-config-provider>
 </template>
 
 <style scoped>
