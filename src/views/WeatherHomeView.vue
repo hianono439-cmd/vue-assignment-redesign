@@ -5,6 +5,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 import SearchBar from '../components/exercise/SearchBar.vue'
 import WeatherCard from '../components/exercise/WeatherCard.vue'
+import { useTemperature } from '../composables/useTemperature'
 import { useWeatherStore } from '../stores/weatherStore'
 
 const router = useRouter()
@@ -81,9 +82,16 @@ const heroWeatherCity = computed(
   () => selectedCityInfo.value ?? outingWeatherCity.value,
 )
 
+const heroRawTemperature = computed(() => heroWeatherCity.value?.temp)
+const {
+  displayTemp: heroDisplayTemperature,
+  unitSymbol: heroUnitSymbol,
+} = useTemperature(heroRawTemperature)
+
+// 메인 배너와 소개 영역도 전역 온도 단위 설정을 따라 표시한다.
 const heroTemperature = computed(() => {
-  const temperature = heroWeatherCity.value?.temp
-  return Number.isFinite(Number(temperature)) ? `${temperature}°` : '—'
+  if (heroDisplayTemperature.value === '—') return '—'
+  return `${heroDisplayTemperature.value}${heroUnitSymbol.value}`
 })
 
 // 선택된 도시의 날씨에 맞춰 메인 배경 테마를 바꾼다.
